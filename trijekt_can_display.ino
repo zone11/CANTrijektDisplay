@@ -26,8 +26,11 @@ void setup()
   //  digitalWrite(4, HIGH); 
   //  pinMode(5, INPUT);
   //  digitalWrite(5, HIGH); 
-  //  pinMode(7, OUTPUT);
-  //  pinMode(8, OUTPUT);
+  pinMode(7, OUTPUT);
+  pinMode(8, OUTPUT);
+  
+  digitalWrite(7,true);
+  digitalWrite(8,true);
   
   lcd.begin(4,20);
   lcd.setCursor(0,1);
@@ -35,12 +38,13 @@ void setup()
   lcd.setCursor(0,2);
   lcd.print("v1.0 AIM2 24.02.2013");
   Serial.begin(57600);
-  delay(250);
+  delay(750);
   CAN.begin(CAN_500KBPS);
-  delay(250);
   attachInterrupt(0, MCP2515_ISR, FALLING);
-  delay(250);
+
   lcd.clear();
+  
+  digitalWrite(7,false);
 }
 
 // MAIN LOOP!
@@ -53,8 +57,6 @@ void loop() {
 
 // Interrupt Buttons
 void BUTTON_ISR() {
-  digitalWrite(7,digitalRead(4)); 
-  digitalWrite(8,digitalRead(5)); 
 
 }
 // Interrupt Display Data
@@ -120,8 +122,10 @@ void LCD_ISR()
 
 // Interrupt CAN Data Reseived
 void MCP2515_ISR() {
+  digitalWrite(8,true);
   CAN.readMsgBuf(&can_len, can_buf);  
   parseData(CAN.getCanId());
+  digitalWrite(8, false);
 }
 
 // Parse data from buffer
@@ -148,8 +152,6 @@ void parseData(int id) {
     ecu_error = (int)(word(can_buf[4],can_buf[5]));
     break;    
   }
-
-  ecu_rpm = 2500;
 }
 
 // Print CAN Data formated to Serial1
@@ -164,6 +166,7 @@ void printBuf(uint32_t frame_id, byte *frame_data) {
   }
   Serial.println("]"); 
 }
+
 
 
 
