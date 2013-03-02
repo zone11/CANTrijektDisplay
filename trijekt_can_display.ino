@@ -22,10 +22,6 @@ LiquidCrystal lcd(A0, A1, A2, A3, A4, A5);
 
 void setup()
 {
-  //  pinMode(4, INPUT);
-  //  digitalWrite(4, HIGH); 
-  //  pinMode(5, INPUT);
-  //  digitalWrite(5, HIGH); 
   pinMode(7, OUTPUT);
   pinMode(8, OUTPUT);
   
@@ -33,15 +29,8 @@ void setup()
   digitalWrite(8,true);
   
   lcd.begin(4,20);
-  lcd.setCursor(0,1);
-  lcd.print(" trijkt CAN Display ");
-  lcd.setCursor(0,2);
-  lcd.print("v1.0 AIM2 24.02.2013");
-  Serial.begin(57600);
-  delay(750);
   CAN.begin(CAN_500KBPS);
   attachInterrupt(0, MCP2515_ISR, FALLING);
-
   lcd.clear();
   
   digitalWrite(7,false);
@@ -50,8 +39,6 @@ void setup()
 // MAIN LOOP!
 void loop() {
   LCD_ISR();
-  //BUTTON_ISR();
-
   delay(100);
 }
 
