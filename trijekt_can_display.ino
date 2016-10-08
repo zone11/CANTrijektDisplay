@@ -1,3 +1,9 @@
+/*
+ Name:       Trijekt CAN Display
+ Updated:    08.10.2016
+ Author:     Christian Egger, zone11@mac.com
+*/
+
 #include "mcp_can.h"
 #include <SPI.h>
 #include <stdio.h>
@@ -20,35 +26,29 @@ float ecu_volt = 0;
 
 LiquidCrystal lcd(A0, A1, A2, A3, A4, A5);
 
-void setup()
-{
-  pinMode(7, OUTPUT);
-  pinMode(8, OUTPUT);
-  
-  digitalWrite(7,true);
-  digitalWrite(8,true);
-  
+void setup() {
   lcd.begin(4,20);
+  lcd.setCursor(0,1);
+  lcd.print(" trijkt CAN Display ");
+  lcd.setCursor(0,2);
+  lcd.print("v1.0 AIM2 24.02.2013");
+  Serial.begin(57600);
+  delay(250);
   CAN.begin(CAN_500KBPS);
+  delay(250);
   attachInterrupt(0, MCP2515_ISR, FALLING);
+  delay(250);
   lcd.clear();
-  
-  digitalWrite(7,false);
 }
 
 // MAIN LOOP!
 void loop() {
-  LCD_ISR();
+  updateLCD();
   delay(100);
 }
 
-// Interrupt Buttons
-void BUTTON_ISR() {
-
-}
 // Interrupt Display Data
-void LCD_ISR()
-{
+void updateLCD() {
   lcd.setCursor(0,0);
   lcd.print("RPM ");
   if(ecu_rpm > 9) {
@@ -74,7 +74,6 @@ void LCD_ISR()
   lcd.print("MAP ");
   lcd.print(ecu_map,DEC);
 
-
   lcd.setCursor(0,2);
   lcd.print("CLT ");
   lcd.print(ecu_clt,DEC);
@@ -90,34 +89,30 @@ void LCD_ISR()
   lcd.setCursor(0,3);
   lcd.print("BAT ");
   lcd.print(ecu_volt);
-
-  /*
+  
+  // Copy data to Serial1
   Serial.print("U:   ");
-   Serial.println(ecu_volt);
-   Serial.print("CLT: ");
-   Serial.println(ecu_clt, DEC);
-   Serial.print("MAT: ");
-   Serial.println(ecu_mat, DEC);
-   Serial.print("INP: ");
-   Serial.print(inp1);
-   Serial.println(inp2);
-   Serial.print("PAG: ");
-   Serial.print(page);
-   Serial.println("---");
-   */
+  Serial.println(ecu_volt);
+  Serial.print("CLT: ");
+  Serial.println(ecu_clt, DEC);
+  Serial.print("MAT: ");
+  Serial.println(ecu_mat, DEC);
+  Serial.print("INP: ");
+  Serial.print(inp1);
+  Serial.println(inp2);
+  Serial.print("PAG: ");
+  Serial.print(page);
+  Serial.println("---");
 }
 
 // Interrupt CAN Data Reseived
 void MCP2515_ISR() {
-  digitalWrite(8,true);
   CAN.readMsgBuf(&can_len, can_buf);  
   parseData(CAN.getCanId());
-  digitalWrite(8, false);
 }
 
 // Parse data from buffer
 void parseData(int id) {
-
   switch(id) {
   case 0x770:
     ecu_rpm =  ((int)(word(can_buf[0],can_buf[1])));
@@ -141,9 +136,9 @@ void parseData(int id) {
   }
 }
 
-// Print CAN Data formated to Serial1
+// Print CAN Data formated to Serial1 - For Debug only....
 void printBuf(uint32_t frame_id, byte *frame_data) {
-  Serial.print(" Frame:");
+  Serial.print("Frame: ");
   Serial.print(frame_id,HEX);
 
   Serial.print(" Data:[");
@@ -153,14 +148,3 @@ void printBuf(uint32_t frame_id, byte *frame_data) {
   }
   Serial.println("]"); 
 }
-
-
-
-
-
-
-
-
-
-
-
