@@ -51,7 +51,7 @@ void loop() {
 void updateLCD() {
   lcd.setCursor(0,0);
   lcd.print("RPM ");
-  if(ecu_rpm > 9) {
+  if(ecu_rpm > 9) {
     lcd.setCursor(4,0);
   } 
   else if (ecu_rpm > 99) {
@@ -97,11 +97,6 @@ void updateLCD() {
   Serial.println(ecu_clt, DEC);
   Serial.print("MAT: ");
   Serial.println(ecu_mat, DEC);
-  Serial.print("INP: ");
-  Serial.print(inp1);
-  Serial.println(inp2);
-  Serial.print("PAG: ");
-  Serial.print(page);
   Serial.println("---");
 }
 
@@ -134,17 +129,4 @@ void parseData(int id) {
     ecu_error = (int)(word(can_buf[4],can_buf[5]));
     break;    
   }
-}
-
-// Print CAN Data formated to Serial1 - For Debug only....
-void printBuf(uint32_t frame_id, byte *frame_data) {
-  Serial.print("Frame: ");
-  Serial.print(frame_id,HEX);
-
-  Serial.print(" Data:[");
-  for (int i=0;i<8;i++) {
-    if (i>0) Serial.print(" ");
-    Serial.print(frame_data[i],HEX);
-  }
-  Serial.println("]"); 
 }
