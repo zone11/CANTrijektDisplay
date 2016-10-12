@@ -1,5 +1,5 @@
 /*
- Name:       Trijekt CAN Display
+ Name:       trijktDisplay
  Updated:    08.10.2016
  Author:     Christian Egger, zone11@mac.com
 */
