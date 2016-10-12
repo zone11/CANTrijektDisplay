@@ -1,6 +1,6 @@
 /*
  Name:       trijktDisplay
- Updated:    08.10.2016
+ Updated:    12.10.2016
  Author:     Christian Egger, zone11@mac.com
 */
 
@@ -29,9 +29,9 @@ LiquidCrystal lcd(A0, A1, A2, A3, A4, A5);
 void setup() {
   lcd.begin(4,20);
   lcd.setCursor(0,1);
-  lcd.print(" trijkt CAN Display ");
+  lcd.print(" trijktDisplay CAN");
   lcd.setCursor(0,2);
-  lcd.print("v1.0 AIM2 24.02.2013");
+  lcd.print("v0.1 AIM2 2016.10.12");
   Serial.begin(57600);
   delay(250);
   CAN.begin(CAN_500KBPS);
